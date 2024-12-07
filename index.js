@@ -38,6 +38,12 @@ async function run() {
       console.log(userReview);
       const result = await userReviews.insertOne(userReview);
       res.send(result)
+      
+    })
+    app.get('/userReview',async(req,res)=>{
+      const cursor = userReviews.find();
+      const result=await cursor.toArray();
+      res.send(result)
     })
 
     // create
@@ -47,11 +53,27 @@ async function run() {
       const result = await gameCollection.insertOne(newReview);
       res.send(result)
     })
+   
+
     // read
     app.get('/review',async(req,res)=>{
-      const cursor = gameCollection.find();
+      const query= req.query.sort
+      if (query== "rating") {
+        const cursor = gameCollection.find().sort({"rating":1});
       const result=await cursor.toArray();
       res.send(result)
+      }
+      else if (query== "year") {
+        const cursor = gameCollection.find().sort({"year":1});
+      const result=await cursor.toArray();
+      res.send(result)
+      }
+      else{
+        const cursor = gameCollection.find();
+      const result=await cursor.toArray();
+      res.send(result)
+      }
+      
     })
     app.get('/reviews',async(req,res)=>{
       const cursor = gameCollection.find().limit(6);
