@@ -30,6 +30,16 @@ async function run() {
     const database = client.db("GamerBD");
     const gameCollection= database.collection("gamer");
 
+    const userReviews= database.collection("review");
+
+    // userReview
+    app.post('/userReview',async(req,res)=>{
+      const userReview= req.body;
+      console.log(userReview);
+      const result = await userReviews.insertOne(userReview);
+      res.send(result)
+    })
+
     // create
     app.post('/reviews',async(req,res)=>{
       const newReview= req.body;
@@ -55,6 +65,36 @@ async function run() {
       const result = await gameCollection.deleteOne(query);
       res.send(result)
     })
+    // Update
+    app.get('/review/:id',async(req,res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id) };
+      const result = await gameCollection.findOne(query);
+      res.send(result)
+    })
+    app.put('/review/:id',async(req,res)=>{
+      const id = req.params.id;
+      console.log(id);
+      const filter = {_id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateReview=req.body;
+      console.log(updateReview);
+      const Review = {
+        $set: {
+          photo:updateReview.photo,
+          name:updateReview.name,
+          description:updateReview.description,
+          year:updateReview.year,
+          genres:updateReview.genres,
+          rating:updateReview.rating,
+        
+        },
+      };
+      const result = await gameCollection.updateOne(filter, Review, options);
+      res.send(result)
+    
+    })
+
 
   
 
