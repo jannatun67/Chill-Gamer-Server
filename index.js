@@ -46,7 +46,7 @@ async function run() {
       res.send(result)
     })
 
-    // create
+    
     app.post('/reviews',async(req,res)=>{
       const newReview= req.body;
       console.log(newReview);
